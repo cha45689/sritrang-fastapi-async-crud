@@ -1,0 +1,6 @@
+-r requirements.txt
+pytest-asyncio==0.25
+pylint==3.3.2
+mypy==1.14.0
+flake8==7.1.1
+pre-commit==4.0.1
