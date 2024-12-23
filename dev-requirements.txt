@@ -1,5 +1,6 @@
 -r requirements.txt
 pytest-asyncio==0.25
+pytest-cov==6.0.0
 pylint==3.3.2
 mypy==1.14.0
 flake8==7.1.1
