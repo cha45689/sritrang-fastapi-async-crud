@@ -24,9 +24,7 @@ jobs:
       with:
         python-version: 3.11
         cache: 'pip'
-        cache-dependency-path: |
-          "requirements.txt"
-          "dev-requirements.txt"
+        cache-dependency-path: "*requirements.txt"
     - run: |
         python -m pip install --upgrade pip
         if [ -f dev-requirements.txt ]; then pip install -r dev-requirements.txt; elif [ -f requirements.txt ]; then pip install -r requirements.txt; fi
