@@ -17,9 +17,13 @@ class PaginationQuery:
 
     def __init__(
         self,
-        page: Annotated[int, Query(gt=0)] = 1,
-        size: Annotated[int, Query(gt=0)] = 10,
-        desc: Annotated[bool, Query()] = False,
+        page: Annotated[int, Query(gt=0, description="page use to fetch data")] = 1,
+        size: Annotated[
+            int, Query(gt=0, description="maximum number of data to show in a page")
+        ] = 10,
+        desc: Annotated[
+            bool, Query(description="whether to order item descending by id")
+        ] = False,
     ):
         self.page = page
         self.size = size
