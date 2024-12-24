@@ -32,7 +32,7 @@ async def get_items(
     paginatioon_query: Annotated[PaginationQuery, Depends(PaginationQuery)]
 ) -> ItemsPaginationContent:  # type: ignore[valid-type]
     """
-    function use to create item record
+    function to get item records with pagination
     """
     items_queryset = ItemsORM.all()
     pagination = paginatioon_query.build_pagination(total=await items_queryset.count())
@@ -47,7 +47,7 @@ async def get_items(
 @item_routes.get("/{item_id}", responses={404: {"model": DefaultHTTPExceptionContent}})
 async def get_item(item: Annotated[ItemsORM, Depends(init_item)]) -> Item:  # type: ignore[valid-type]
     """
-    function use to create item record
+    function to get item using id
     """
     return item
 
@@ -57,7 +57,7 @@ async def update_item(
     item_payload: ItemInput, item: Annotated[ItemsORM, Depends(init_item)]  # type: ignore[valid-type]
 ) -> Item:  # type: ignore[valid-type]
     """
-    function use to create item record
+    function to update item using id and update payload
     """
     item = item.update_from_dict(
         item_payload.model_dump()  # type: ignore[attr-defined]
@@ -73,7 +73,7 @@ async def delete_item(
     item: Annotated[ItemsORM, Depends(init_item)]
 ) -> Item:  # type: ignore[valid-type]
     """
-    function use to create item record
+    function delete item record using id
     """
     await item.delete()
     return item
