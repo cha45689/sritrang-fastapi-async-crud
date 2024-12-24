@@ -17,9 +17,9 @@ class PaginationQuery:
 
     def __init__(
         self,
-        page: Annotated[int, Query(1, gt=0)],
-        size: Annotated[int, Query(10, gt=0)],
-        desc: Annotated[bool, Query(False)],
+        page: Annotated[int, Query(gt=0)] = 1,
+        size: Annotated[int, Query(gt=0)] = 10,
+        desc: Annotated[bool, Query()] = False,
     ):
         self.page = page
         self.size = size
@@ -33,10 +33,11 @@ class PaginationQuery:
             raise HTTPException(status_code=404, detail="There is no item found")
         if self.offset > total:
             raise HTTPException(status_code=404, detail="Current page exceed last page")
+        last_page = math.ceil(total / self.size)
         return Pagination(
             current_page=self.page,
-            next_page=self.page + 1,
-            last_page=math.ceil(total / self.size),
+            next_page=self.page + 1 if self.page < last_page else None,
+            last_page=last_page,
             total=total,
             size=self.size,
         )
