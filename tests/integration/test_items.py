@@ -12,6 +12,7 @@ from httpx import ASGITransport, AsyncClient
 
 from app.application.main import app
 from app.database.models.items import Item
+from app.database.models.pagination import Pagination
 from tests.integration.conftest import IDStorage
 from tests.mock_data.item import (  # noqa: F401; pylint: disable=W0611
     ItemInputFactory,
@@ -30,6 +31,17 @@ async def async_client():
             transport=ASGITransport(app=manager.app), base_url="http://test"
         ) as ac:
             yield ac
+
+
+@pytest.mark.asyncio
+async def test_read_no_result(client):
+    """
+    Test GET method of items routes to get all items when there is no record
+    """
+    response = await client.get(
+        "/api/v1/items/", params={"page": 9999, "size": 999999, "desc": True}
+    )
+    assert response.status_code == 404
 
 
 @pytest.mark.asyncio
@@ -58,7 +70,7 @@ async def test_fail_create_validation_error(client):
 @pytest.mark.asyncio
 async def test_read(client):
     """
-    Test GET method of items routes aka read item
+    Test GET method of items routes aka read item by id
     """
     response = await client.get(f"/api/v1/items/{IDStorage.item_id}")
     assert response.status_code == 200
@@ -67,10 +79,31 @@ async def test_read(client):
 
 
 @pytest.mark.asyncio
-async def test_read_all(client):  # pylint: disable=W0613
+async def test_read_all(client):
     """
-    Test GET method of items routes aka read item
+    Test GET method of items routes to get all items using pagination
     """
+    response = await client.get(
+        "/api/v1/items/", params={"page": 1, "size": 10, "desc": True}
+    )
+    assert response.status_code == 200
+    json_response = response.json()
+    assert "data" in json_response
+    assert "pagination" in json_response
+    assert isinstance(json_response["data"], list)
+    Pagination(**json_response["pagination"])
+
+
+@pytest.mark.asyncio
+async def test_read_page_exceed(client):
+    """
+    Test GET method of items routes to get all items using pagination in case page exceed last page
+    hopefully no one will seed test database with more than the 999999*9999 record
+    """
+    response = await client.get(
+        "/api/v1/items/", params={"page": 9999, "size": 999999, "desc": True}
+    )
+    assert response.status_code == 404
 
 
 @pytest.mark.asyncio
