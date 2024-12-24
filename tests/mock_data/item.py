@@ -1,5 +1,5 @@
 """
-This is for fixture of mock item data
+This is for fixture of mock item data and other mock data for item
 """
 
 import factory
