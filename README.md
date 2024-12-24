@@ -20,6 +20,14 @@ fastapi run app/application/main.py
 ```bash
 pre-commit install
 ```
+
+# How to run using Docker
+please install docker and docker compose before running the snippet in terminal
+```bash
+docker compose build
+docker compose up
+```
+
 # API usage examples
 Please use swagger to try it out or please import from file item_crud.postman_collection.json
 
