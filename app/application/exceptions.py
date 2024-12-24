@@ -5,7 +5,16 @@ This module is use to host custome exception handler code
 from fastapi import Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
+from pydantic import BaseModel
 from starlette.responses import JSONResponse
+
+
+class DefaultHTTPExceptionContent(BaseModel):
+    """
+    default htpp exception content format
+    """
+
+    detail: str = ""
 
 
 async def validation_exception_handler(
