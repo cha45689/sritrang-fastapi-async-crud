@@ -8,6 +8,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 
 from app.application.dependencies.items import init_item
+from app.application.exceptions import DefaultHTTPExceptionContent
 from app.database.models.items import Item, ItemInput, ItemsORM
 
 item_routes = APIRouter(prefix="/items")
@@ -24,7 +25,7 @@ async def create_item(item_payload: ItemInput) -> Item:  # type: ignore[valid-ty
     return item
 
 
-@item_routes.get("/{item_id}")
+@item_routes.get("/{item_id}", responses={404: {"model": DefaultHTTPExceptionContent}})
 async def get_item(item: Annotated[ItemsORM, Depends(init_item)]) -> Item:  # type: ignore[valid-type]
     """
     function use to create item record
@@ -32,7 +33,7 @@ async def get_item(item: Annotated[ItemsORM, Depends(init_item)]) -> Item:  # ty
     return item
 
 
-@item_routes.put("/{item_id}")
+@item_routes.put("/{item_id}", responses={404: {"model": DefaultHTTPExceptionContent}})
 async def update_item(
     item_payload: ItemInput, item: Annotated[ItemsORM, Depends(init_item)]  # type: ignore[valid-type]
 ) -> Item:  # type: ignore[valid-type]
@@ -43,4 +44,17 @@ async def update_item(
         item_payload.model_dump()  # type: ignore[attr-defined]
     )
     await item.save()
+    return item
+
+
+@item_routes.delete(
+    "/{item_id}", responses={404: {"model": DefaultHTTPExceptionContent}}
+)
+async def delete_item(
+    item: Annotated[ItemsORM, Depends(init_item)]
+) -> Item:  # type: ignore[valid-type]
+    """
+    function use to create item record
+    """
+    await item.delete()
     return item
