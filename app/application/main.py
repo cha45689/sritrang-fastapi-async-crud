@@ -26,8 +26,6 @@ def custom_openapi(app: FastAPI) -> FastAPI:  # pylint: disable=W0621
     """
     This function is use to overwrite default status code  422 response to 400 in openapi (swagger)
     """
-    if app.openapi_schema:
-        return app
     openapi_schema = get_openapi(
         title=app.title,
         version=app.version,
