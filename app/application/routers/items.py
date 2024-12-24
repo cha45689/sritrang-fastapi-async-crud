@@ -15,5 +15,7 @@ async def create_item(item_payload: ItemInput) -> Item:  # type: ignore[valid-ty
     """
     function use to create item record
     """
-    item: ItemsORM = await ItemsORM.create(**item_payload.dict())  # type: ignore[attr-defined]
+    item: ItemsORM = await ItemsORM.create(
+        **item_payload.model_dump()  # type: ignore[attr-defined]
+    )
     return item
