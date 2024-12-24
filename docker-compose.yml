@@ -1,0 +1,13 @@
+version: "3.9"
+
+services:
+  simple-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: simple-api:test
+    env_file:
+      - .env
+    ports:
+      - 80:80
+    command: ["run", "app/application/main.py", "--port", "80", "--workers", "3"]
